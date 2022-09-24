@@ -9,6 +9,7 @@ export default function ViewAdminComplaintList() {
   let [userList, setUserList] = useState([]);
   let [id, setId] = useState([]);
   let [acceptId, setAcceptId] = useState([]);
+  let [deptId, setdeptId] = useState([]);
 
   useEffect(() => {
     ase();
@@ -16,6 +17,7 @@ export default function ViewAdminComplaintList() {
   }, []);
   let [cid, setCid] = useState();
   let [acid, setAcid] = useState();
+  let [did, setdid] = useState();
   //  function deletecomp(id) {
   //   deletecomplaint(id);
   //  }
@@ -81,8 +83,7 @@ export default function ViewAdminComplaintList() {
   const onSubmit = (data) => {
     console.log(data);
     axios
-      .post( "http://localhost:8080/viewadmincomplaints/accepted",
-      JSON.parse(sessionStorage.user).userId)
+      .post("http://localhost:8080/reject", data)
       .then((response) => {
         window.location = "/admin/viewcomplaints";
       })
@@ -90,6 +91,19 @@ export default function ViewAdminComplaintList() {
         console.log(error.response.data.result);
         swal(error.response.data.result);
         //swal("invalid credentials");
+      });
+  };
+  const Submit = (data) => {
+    console.log(data);
+    axios
+      .post("http://localhost:8080/registercomplaint1", data)
+      .then((response) => {
+        window.location = "/admin/viewcomplaints";
+      })
+      .catch((error) => {
+        console.log(error.response.data.result);
+        swal(error.response.data.result);
+        swal("invalid credentials");
       });
   };
 
@@ -204,6 +218,159 @@ export default function ViewAdminComplaintList() {
           </form>
         );
       })}
+      {deptId.map((item) => {
+        return (
+          <form onSubmit={handleSubmit(Submit)}className="mx-4">
+              <div className="form-group">
+              <label htmlFor="complaintId">Complaint Id</label>
+              <input
+                type="text"
+                className="form-control"
+                id="complaintId"
+                name="complaintId"
+                value={did}
+                
+              />
+            </div>
+          <div className="form-group">
+            <label htmlFor="dept">Department</label>
+            <select
+              className="form-control"
+              id="dept"
+              name="dept"
+              {...register("dept", { required: true })}
+            >
+              {errors.dept && errors.dept.type === "required" && (
+                <span role="alert" class="imp">
+                  *This field is required
+                </span>
+              )}
+              <option value="">Select Department</option>
+              <option value="Road construction Department">
+                Road construction Department
+              </option>
+              <option value="Water Supply Department">
+                Water Supply Department
+              </option>
+              <option value="Drainage Department">Drainage Department</option>
+              <option value="Health Department">Health Department</option>
+              <option value="Waste management Department">
+                Waste management Department
+              </option>
+              <option value="Education department">
+                Education department
+              </option>
+              <option value="Environment Department">
+                Environment Department
+              </option>
+            </select>
+          </div>
+
+          {/* <div className="form-group">
+            <label htmlFor="pincode">PinCode</label>
+            <input
+              type="number"
+              className="form-control"
+              id="pincode"
+              name="pincode"
+              placeholder="Enter pincode"
+              {...register("pincode", {
+                required: true,
+                minLength: 6,
+                maxLength: 8,
+              })}
+            /> 
+            {errors.pincode && errors.pincode.type === "required" && (
+              <span role="alert" class="imp">
+                *This field is required
+              </span>
+            )}
+            {errors.pincode && errors.pincode.type === "minLength" && (
+              <span role="alert" class="imp">
+                *Invalid pincode minLength:6 maxLength:8
+              </span>
+            )}
+            </div>*/}
+          <div className="form-group">
+            {/* <label htmlFor="userId">user id</label> */}
+            <input
+              type="hidden"
+              className="form-control"
+              id="userId"
+              name="userId"
+              value={JSON.parse(sessionStorage.user).userId}
+              placeholder="Enter your complaint details here"
+              {...register("userId", {
+                required: true,
+              })}
+            />
+
+            <div className="form-group">
+              <label htmlFor="description">Description</label>
+              <input
+                type="text"
+                className="form-control"
+                id="description"
+                name="description"
+                placeholder="Enter your complaint details here"
+                {...register("description", {
+                  required: true,
+                  pattern: /[A-Za-z0-9]{3}/,
+                  min: 20,
+                  max: 500,
+                })}
+              />
+              {errors.description && errors.description.type === "required" && (
+                <span role="alert" class="imp">
+                  *This field is required
+                </span>
+              )}
+              {errors.description && errors.description.type === "pattern" && (
+                <span role="alert" class="imp">
+                  *Must not use symbols
+                </span>
+              )}
+
+              {errors.description && errors.description.type === "min" && (
+                <span role="alert" class="imp">
+                  *Please Fill the description
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* <div className="form-group">
+            <label htmlFor="dates"> Date of Complaint: </label>
+            <input type="date" id="dates" name="dates"></input>
+          </div> */}
+
+         
+
+          <div className="form-group">
+            <div className="form-check form-check-inline">
+              <input
+                className="confirm"
+                
+                type="checkbox"
+                id="confirm"
+                name="confirm"
+                {...register("confirm", { required: true })}
+              />
+              {errors.confirm && errors.confirm.type === "required" && (
+                <span role="alert" class="imp"></span>
+              )}
+              <label className="confirm" htmlFor="confirm">
+                Confirm the Department
+              </label>
+            </div>
+          </div>
+
+          <button className="btn btn-primary" type="submit">
+            File Department
+          </button>
+        </form>
+        );
+      })}
       {id.map((item) => {
         return (
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -316,11 +483,28 @@ export default function ViewAdminComplaintList() {
               >
                 reject
               </button>
+              <button
+                className="btn btn-danger my-3 mx-2"
+                onClick={
+                  () => {
+                    setdeptId([1]);
+                  setId([]);
+                  setdid(item.complaintId);
+                    console.log(did);
+                  }
+
+                }
+              >
+                SendtoDept
+              </button>
+              
             </div>
           </div>
+          
         );
       })}
     </div>
+
   );
 }
 

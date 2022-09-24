@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.daos.AdminRepository;
 import com.example.daos.ComplaintDao;
+import com.example.daos.DeptDao;
 import com.example.daos.UserDao;
 import com.example.entities.Complaint;
+import com.example.entities.DeptName;
 import com.example.entities.User;
 import com.example.helper.Helper;
 import com.example.services.ComplaintActions;
+import com.example.services.DeptNameAction;
 
 @CrossOrigin
 @RestController
@@ -38,6 +41,14 @@ public class AdminController {
 	@Autowired
 	private ComplaintActions complaintAction;
 	
+	@Autowired
+	private DeptNameAction deptnameaction;
+	
+	@Autowired
+	private DeptDao daoRepository;
+	
+	
+	
 	
 	@Autowired
 	private Helper helper;
@@ -48,10 +59,16 @@ public class AdminController {
 //		return userRepository.findAll();
 //		
 //	}
-	
+//	
 //	@GetMapping("/getjoinusers")
 //	public List<Complaint> getJoinInformation(){
 //		return complaintRepository.findAll();
+//	}
+	
+//	@GetMapping("/getaccept")
+//		public List<DeptName> getInfo(){
+//			return daoRepository.findAll();
+//		
 //	}
 	
 	@PostMapping("/viewadmincomplaints")
@@ -70,14 +87,45 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+//	@PostMapping("/accept1")
+//	public DeptName save(@RequestBody DeptName deptname) {
+//		return deptnameaction.getDeptname(deptname);
+//		
+//	}
 	
-	@PostMapping("/accept")
-	public ResponseEntity<?> updatestatus(@RequestBody int complaintId, String dept ) {
+//	public ResponseEntity<?> updatedept(@RequestBody DeptName deptname){
+//		try {
+//			DeptName deptn =deptnameaction.getDept(deptname);
+//			   
+//			   //deptn.setAdharId("Accept");
+//			   
+//			   
+//			   return ResponseEntity.ok("success");
+//		} catch (Exception e) {
+//			return new ResponseEntity<>("somethinf went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
+	@PostMapping(value= {"/accept"})
+	public ResponseEntity<?> updatestatus(@RequestBody int complaintId, String dept,DeptName deptname) {
   
 	   try {
+//		   System.out.println(complaintId);
+		   
+		   
+	
+//		   
+//		   if(deptname.getAdharId()=="Accepted")
+//		   deptn.setAdharId("Acce");
+//		   //deptn.setPincode(dept);
+		   
+		  
 		Complaint complaint=complaintAction.getComplaint(complaintId);
 		   complaint.setAcknowledgement("Accepted");
 		   complaint.setDept(dept);
+		   
+		   DeptName deptn =deptnameaction.getDeptname(deptname.getDeptno());
+		   deptn.setComplaintId(complaintId);
+		  
 		   User user=userRepository.findByUserId(Integer.parseInt(complaint.getUserId()));
 		   helper.sendEmail(user.getEmail(),"Complaint Acceptance", "Hi,\r\n"
 		   		+ "\r\n"

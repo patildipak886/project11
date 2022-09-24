@@ -1,0 +1,15 @@
+package com.example.daos;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.example.entities.Complaint;
+import com.example.entities.DeptName;;
+
+public interface DeptDao  extends JpaRepository<DeptName, Integer> {
+	
+	
+	@Query(value="select * from deptname where dept_no=?1", nativeQuery=true)
+	DeptName findByDeptNo(int parseInt);
+
+}

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javax.persistence.OneToOne"/>
+<fullyQualifiedTypeName name="javax.persistence.JoinColumn"/>
 <fullyQualifiedTypeName name="com.example.entities.DeptName"/>
+<fullyQualifiedTypeName name="com.example.daos.DeptDao"/>
+<fullyQualifiedTypeName name="com.example.daos.ComplaintDao"/>
+<fullyQualifiedTypeName name="com.example.services.DeptNameAction"/>
 </qualifiedTypeNameHistroy>

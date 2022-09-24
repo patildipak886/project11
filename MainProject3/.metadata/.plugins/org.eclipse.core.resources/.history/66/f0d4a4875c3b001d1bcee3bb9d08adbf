@@ -1,0 +1,42 @@
+package com.example.services;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import com.example.daos.ComplaintDao;
+import com.example.daos.DeptDao;
+import com.example.entities.Complaint;
+import com.example.entities.DeptName;
+
+@Service
+@Transactional
+public class DeptActionImpl implements DeptNameAction{
+
+	DeptDao deptdao;
+	//ComplaintDao complaintdao;
+	
+
+	@Override
+	public List<DeptName> getAllDeptName(DeptName deptname) {
+		
+		return null;
+	}
+
+	@Override
+	public DeptName getDept(int id) {
+		DeptName saveDept = deptdao.getById(id);
+		return saveDept;
+		
+	}
+
+	@Override
+	public Complaint registerDeptName(DeptName deptname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+}

@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.daos.ComplaintDao;
+import com.example.daos.DeptDao;
 import com.example.daos.UserDao;
 import com.example.entities.Complaint;
+import com.example.entities.DeptName;
 import com.example.entities.User;
 import com.example.helper.Helper;
 import com.example.services.ComplaintActions;
+import com.example.services.DeptNameAction;
 
 
 @RestController
@@ -32,18 +35,35 @@ public class ComplaintController {
 	private ComplaintDao complaintdao;
 	
 	@Autowired
+	private DeptDao deptdao;
+	
+	@Autowired
+	private DeptNameAction deptact;
+	
+	@Autowired
 	private UserDao userdao;
 	
 	@Autowired
 	Helper helper= new Helper();
 	
 	@PostMapping("/registercomplaint")
-	public ResponseEntity<?> getComplaint(@RequestBody Complaint complaint){
+	public ResponseEntity<?> getComplaint(@RequestBody Complaint complaint,DeptName deptn){
 		System.out.println("complaint details"+complaint);
 		User user =userdao.findByUserId(Integer.parseInt(complaint.getUserId()));
 		complaint.setPincode(user.getPincode());
 		complaint.setComplaintDate(helper.currentDateAndTime());
+		
+		DeptName deptname = deptact.registerDeptName(deptn);
+		
+		deptn.setPin(user.getPincode());
+		deptn.setPincode(complaint.getDept());
+		deptn.setAdharId(complaint.getDescription());
+		
+		
+		
+		
 		Complaint savedComplaint = complaintaction.registerComplaint(complaint);
+		deptname.setComplaintId(savedComplaint.getComplaintId());
 			
 			if(savedComplaint!=null) {
 				String subject = "Complaint Update";
@@ -63,7 +83,43 @@ public class ComplaintController {
 				return new ResponseEntity<>("something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			
 	}
+	@PostMapping("/registercomplaint1")
+	public ResponseEntity<?> getdept(@RequestBody Complaint complaint,DeptName deptn){
+		System.out.println("complaint details"+complaint);
+		User user =userdao.findByUserId(Integer.parseInt(complaint.getUserId()));
+		complaint.setPincode(user.getPincode());
+		complaint.setComplaintDate(helper.currentDateAndTime());
 		
+		DeptName deptname = deptact.registerDeptName(deptn);
+		
+		deptn.setPin(user.getPincode());
+		deptn.setPincode(complaint.getDept());
+		deptn.setAdharId(complaint.getDescription());
+		
+		
+		
+		
+		Complaint savedComplaint = complaintaction.registerComplaint(complaint);
+		
+			
+			if(savedComplaint!=null) {
+				String subject = "Complaint Update";
+				
+				String message = "Dear Sir/Ma'am, \n      Your complaint is registered successfully with the complaint details as below:"+
+				                  "\n Department Name: "+savedComplaint.getDept() +"\n Complaint Description: "
+						          +savedComplaint.getDescription()+"\n Date and Time: "+savedComplaint.getComplaintDate();
+				
+				try {
+					helper.sendEmail(user.getEmail(),subject, message);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return ResponseEntity.ok("Complaint registered successful");
+			}else
+		//return ResponseEntity.ok("Something went wrong");
+				return new ResponseEntity<>("something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			
+	}
 	@PostMapping("/viewusercomplaints")
 	public ResponseEntity<?> viewComplaint(@RequestBody String userId){
 		String str = userId.substring(0,userId.length()-1);

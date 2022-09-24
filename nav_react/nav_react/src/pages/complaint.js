@@ -181,7 +181,7 @@ function Complaint() {
               <div className="form-check form-check-inline">
                 <input
                   className="confirm"
-                  className="confirm"
+                  
                   type="checkbox"
                   id="confirm"
                   name="confirm"
