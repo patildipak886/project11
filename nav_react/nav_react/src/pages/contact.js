@@ -65,8 +65,7 @@ function Contact() {
                   Office Location
                 </Card.Title>
                 <Card.Text>
-                  Raintree Marg, near Bharati Vidyapeeth, Kharghar, Navi Mumbai,
-                  Maharashtra 410210
+                  h
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -85,8 +84,7 @@ function Contact() {
                   Office Location
                 </Card.Title>
                 <Card.Text>
-                  Gulmohar, Cross Rd Number 9, JVPD Scheme, Juhu, Mumbai,
-                  Maharashtra 400049
+                 g
                 </Card.Text>
               </Card.Body>
             </Card>
